@@ -2,8 +2,8 @@
 set -e
 
 # directories (rename if needed)
-dir="/Volumes/T7/16s"
-dir_read="$dir/1_read"
+dir="/Volumes/T7/single_end_sequences"
+dir_reads="$dir/1_reads"
 dir_feature="$dir/2_feature"
 dir_taxonomy_a="$dir/3_taxonomy_a"
 dir_taxonomy_v="$dir/4_taxonomy_v"
@@ -14,23 +14,23 @@ dir_differential="$dir/6_differential"
 r1="sequences.fastq.gz"
 barcode="barcodes.fastq.gz"
 metadata="$dir/sample-metadata.tsv"
-ref_seqs="/Volumes/T7/databases/silva138_AB_V3V4/silva138_AB_V3-V4seqs_uniq.qza"
-ref_taxa="/Volumes/T7/databases/silva138_AB_V3V4/silva138_AB_V3V4taxa_uniq.qza"
+ref_seqs="/Volumes/T7/databases/moving_pictures/reference-sequences.qza"
+ref_taxa="/Volumes/T7/databases/moving_pictures/reference-taxonomy.qza"
 
 # generated files
 table="$dir_feature/table.qza"
 classification="$dir_taxonomy_a/classification.qza"
 
-mkdir -p "$dir_read" && cd "$dir_read"
+mkdir -p "$dir_reads" && cd "$dir_reads"
     for f in "$r1" "$barcode"; do       # append read file if needed 
         if [ -f "$dir/$f" ];
-            then mv "$dir/$f" "$dir_read/"
+            then mv "$dir/$f" "$dir_reads/"
         fi
     done
 
     qiime tools import \
         --type 'EMPSingleEndSequences' \
-        --input-path "$dir_read" \
+        --input-path "$dir_reads" \
         --output-path emp-single-end-sequences.qza \
     # run `qiime tools list-types` to check all '--type'
 
@@ -46,7 +46,7 @@ echo "Successfully import and demux read!"
 
 mkdir -p "$dir_feature" && cd "$dir_feature"
     qiime dada2 denoise-single \
-        --i-demultiplexed-seqs "$dir_read/demux.qza" \
+        --i-demultiplexed-seqs "$dir_reads/demux.qza" \
         --p-trim-left 0 \
         --p-trunc-len 120 \
         --o-representative-sequences rep_seqs.qza \
@@ -121,6 +121,7 @@ mkdir -p "$dir_differential" && cd "$dir_differential"
         --m-metadata-file "$metadata" \
         --p-formula bodysite \
         --o-differentials differentials.qza
+    # set '--p-formula' to a column name of the metadata
 
     qiime composition tabulate \
         --i-data differentials.qza \
