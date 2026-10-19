@@ -1,90 +1,105 @@
+# directories
 dir="/Volumes/T7/16s"
-asv="$dir/asv"
+features="$dir/1_features"
 taxonomy_a="$dir/taxnomy_a"
 taxonomy_v="$dir/taxnomy_v"
 diversity="$dir/diversity"
 differential="$dir/differential"
 
-r1="$dir/A3_S22_L001_R1_001.fastq"
-r2="$dir/A3_S22_L001_R2_001.fastq"
-metadata="$dir/metadata.tsv"
+# files
+seq="$dir/emp-single-end-sequences.fastq.gz"
+metadata="$dir/sample-metadata.tsv"
 ref_seqs="/Volumes/T7/databases/silva138_AB_V3_V4/silva138_AB_V3-V4seqs_uniq.qza"
 ref_taxa="/Volumes/T7/databases/silva138_AB_V3_V4/silva138_AB_V3-V4taxa_uniq.qza"
+table="$dir/features/table.qza"
+classification="$dir/taxonomy_a/classification.qza"
 
 
-mkdir -p "$asv" && cd "$asv"
-   
+mkdir -p "$features" && cd "$features"
     qiime tools import \
-        --type 'SampleData[PairedEndSequencesWithQuality]' \
-        --input-path "$r1" "$r2" \
-        --output-path demux-paired.qza \
-        # run `qiime tools list-types` to check all types
+        --type 'EMPSingleEndSequences' \
+        --input-path "$seq" \
+        --output-path emp-single-end-sequences.qza \
+        #! run `qiime tools list-types` to check all '--type'
 
-    # qiime2 dada2 denoise-paired
     qiime dada2 denoise-paired \
-        --i-demultiplexed-seqs demux-paired.qza \
-        --p-trunc-len-f 250 \
-        --p-trunc-len-r 250 \
+        --i-demultiplexed-seqs emp-single-end-sequences.qza \
+        --p-trunc-len-f 120 \
         --o-representative-sequences representative-sequences.qza \
-        --o-table asv-table.qza \
+        --o-table "$table" \
         --o-denoising-stats denoising-stats.qza \
+        #! set '--p-trunc-len-f'
 
-    # qiime2 feature-table summarize
     qiime feature-table summarize \
-        --i-table feature-table.qza \
+        --i-table "$table" \
         --m-metadata-file "$metadata" \
         --o-visualization summary.qzv \
 
+    qiime feature-table tabulate-feature-frequencies \
+        --i-table "$table" \
+        --o-feature-frequencies feature-frequencies.qza
+
+    qiime feature-table tabulate-sample-frequecies \
+        --i-table "$table" \
+        --o-sample-frequencies sample-frequencies.qza
+
 
 mkdir -p "$taxonomy_a" && cd "$taxonomy_a"
-    # qiime2 feature-classifier classify-consensus blast
     qiime feature-classifier classify-consensus-blast \
-        --i-query "$asv/representative-sequences.qza" \
+        --i-query "$features/representative-sequences.qza" \
         --i-reference-reads "$ref_seqs" \
         --i-reference-taxonomy "$ref_taxa" \
-        --o-classifier taxonomy.qza
+        --o-classifier "$classification"
 
-    # qiime2 taxa collapse
     qiime taxa collapse \
-    --i-table "$asv/asv-table.qza" \
-    --i-taxonomy taxonomy.qza \
+    --i-table "$table" \
+    --i-taxonomy "$classification" \
     --p-level 3 \
-    --o-collapsed-table collapsed-table-l3.qza
+    --o-collapsed-table collapsed_table.qza
+    #! choose taxonomy level (1-7) to collapse
 
 
 mkdir -p "$taxonomy_v"
-    # qiime2 taxa barplot
-    qiime taxa barplot \
-        --i-table "$asv/asv-table.qza" \
-        --i-taxonomy "$taxonomy_a/taxonomy.qza" \
-        --m-metadata-file "$metadata" \
-        --o-visualization taxa-bar-plots.qzv
+    qiime feature-table heatmap \
+        --i-table "$taxonomy_a/collapsed_table.qza" \
+        --o-visualization feature-heatmap.qzv
 
-    # qiime2 feature-table heatmap
-    qiime feature-table
+    qiime taxa barplot \
+        --i-table "$table" \
+        --i-taxonomy "$classification" \
+        --m-metadata-file "$metadata" \
+        --o-visualization taxa-barplot.qzv
 
 
 mkdir $diversity
-    # qiime2 diversity alpha-rarefaction
     qiime diversity alpha-rarefaction \
-        --i-table "$asv/asv-table.qza" \
+        --i-table "$table" \
         --p-max-depth 7800 \
         --m-metadata-file "$metadata" \
-        --o-visualization alpha-rarefaction.qzv
+        --o-visualization alpha_rarefaction.qzv
 
-    # qiime2 diversity core-metrics
-    qiime diversity
-
+    qiime diversity core-metrics \
+        --i-table "$table" \
+        --p-sampling-depth 7800 \
+        --m-metadata-file "$metadata" \
+        --o-rarefied-table rarefied-table.qza \
+        --o-observed-features-vector observed-features-vector.qza \
+        --o-shannon-vector shannon-vector.qza \
+        --o-evenness-vector evenness-vector.qza \
+        --o-jaccard-distance-matrix jaccard-distance-matrix.qza \
+        --o-bray-curtis-distance-matrix bray-curtis-distance-matrix.qza \
+        --o-jaccard-pcoa-results jaccard-pcoa-results.qza \
+        --o-bray-curtis-pcoa-results bray-curtis-pcoa-results.qza \
+        --o-jaccard-emperor jaccard-emperor.qzv \
+        --o-bray-curtis-emperor bray-curtis-emperor.qzv
 
 mkdir $differential
-    # qiime2 composition ancombc
     qiime composition ancombc \
-        --i-table "$taxonomy_a/collapsed-table-l3.qza" \
+        --i-table "$table" \
         --m-metadata-file "$metadata" \
-        --p-formula subject \
-        --o-differentials ancombc.qza
+        --p-formula bodysite \
+        --o-differentials differentials.qza
 
-    # qiime2 composition tabulate
     qiime composition tabulate \
-        --i-data ancombc.qza \
+        --i-data differentials.qza \
         --o-visualization visualization.qzv
