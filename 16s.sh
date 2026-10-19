@@ -1,47 +1,54 @@
+#!/bin/sh
+set -e
+
 # directories
 dir="/Volumes/T7/16s"
+reads="$dir/0_sequences"
 features="$dir/1_features"
-taxonomy_a="$dir/taxnomy_a"
-taxonomy_v="$dir/taxnomy_v"
-diversity="$dir/diversity"
-differential="$dir/differential"
+taxonomy_a="$dir/2_taxonomy_a"
+taxonomy_v="$dir/3_taxonomy_v"
+diversity="$dir/4_diversity"
+differential="$dir/5_differential"
 
 # files
-seq="$dir/emp-single-end-sequences.fastq.gz"
+read="sequences.fastq.gz"
+barcode="barcodes.fastq.gz"
 metadata="$dir/sample-metadata.tsv"
 ref_seqs="/Volumes/T7/databases/silva138_AB_V3_V4/silva138_AB_V3-V4seqs_uniq.qza"
 ref_taxa="/Volumes/T7/databases/silva138_AB_V3_V4/silva138_AB_V3-V4taxa_uniq.qza"
-table="$dir/features/table.qza"
-classification="$dir/taxonomy_a/classification.qza"
+table="$features/table.qza"
+classification="$taxonomy_a/classification.qza"
 
-
-mkdir -p "$features" && cd "$features"
-    qiime tools import \
-        --type 'EMPSingleEndSequences' \
-        --input-path "$seq" \
-        --output-path emp-single-end-sequences.qza \
-        #! run `qiime tools list-types` to check all '--type'
-
-    qiime dada2 denoise-paired \
-        --i-demultiplexed-seqs emp-single-end-sequences.qza \
-        --p-trunc-len-f 120 \
-        --o-representative-sequences representative-sequences.qza \
-        --o-table "$table" \
-        --o-denoising-stats denoising-stats.qza \
-        #! set '--p-trunc-len-f'
-
-    qiime feature-table summarize \
-        --i-table "$table" \
-        --m-metadata-file "$metadata" \
-        --o-visualization summary.qzv \
-
-    qiime feature-table tabulate-feature-frequencies \
-        --i-table "$table" \
-        --o-feature-frequencies feature-frequencies.qza
-
-    qiime feature-table tabulate-sample-frequecies \
-        --i-table "$table" \
-        --o-sample-frequencies sample-frequencies.qza
+# mkdir -p "$reads" && cd "$reads"
+#     mv "$dir/$read" "$dir/$barcode" "$reads"
+# 
+#     qiime tools import \
+#         --type 'EMPSingleEndSequences' \
+#         --input-path "$reads" \
+#         --output-path emp-single-end-sequences.qza \
+#         #! run `qiime tools list-types` to check all '--type'
+# 
+#     qiime demux emp-single \
+#         --i-seqs emp-single-end-sequences.qza \
+#         --m-barcodes-file "$metadata" \
+#         --m-barcodes-column barcode-sequence \
+#         --o-per-sample-sequences demux.qza \
+#         --o-error-correction-details demux-details.qza
+# 
+# mkdir -p "$features" && cd "$features"
+#     qiime dada2 denoise-single \
+#         --i-demultiplexed-seqs "$reads/demux.qza" \
+#         --p-trim-left 0 \
+#         --p-trunc-len 120 \
+#         --o-representative-sequences representative-sequences.qza \
+#         --o-table "$table" \
+#         --o-denoising-stats denoising-stats.qza \
+#         #! set '--p-trunc-len'
+# 
+#     qiime feature-table summarize \
+#         --i-table "$table" \
+#         --m-sample-metadata-file "$metadata" \
+#         --o-visualization summary.qzv \
 
 
 mkdir -p "$taxonomy_a" && cd "$taxonomy_a"
@@ -49,7 +56,7 @@ mkdir -p "$taxonomy_a" && cd "$taxonomy_a"
         --i-query "$features/representative-sequences.qza" \
         --i-reference-reads "$ref_seqs" \
         --i-reference-taxonomy "$ref_taxa" \
-        --o-classifier "$classification"
+        --o-classification "$classification"
 
     qiime taxa collapse \
     --i-table "$table" \
@@ -59,7 +66,7 @@ mkdir -p "$taxonomy_a" && cd "$taxonomy_a"
     #! choose taxonomy level (1-7) to collapse
 
 
-mkdir -p "$taxonomy_v"
+mkdir -p "$taxonomy_v" && cd "$taxonomy_v"
     qiime feature-table heatmap \
         --i-table "$taxonomy_a/collapsed_table.qza" \
         --o-visualization feature-heatmap.qzv
