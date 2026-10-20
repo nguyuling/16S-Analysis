@@ -80,7 +80,7 @@ run qiime tools import \
     --input-path "$Reads" \
     --input-format CasavaOneEightSingleLanePerSampleDirFmt \
     --output-path data.qza
-# run `qiime tools list-types` to check all '--type'
+# run qiime tools list-types to check all --type
 
 mkdir -p "$Feature" && cd "$Feature"
 
@@ -91,7 +91,7 @@ run qiime dada2 denoise-paired \
     --o-representative-sequences rep_seqs.qza \
     --o-table "$table" \
     --o-denoising-stats denoising-stats.qza
-# set '--p-trunc-len-f' and '--p-trunc-len-r'
+# set --p-trunc-len-f and --p-trunc-len-r
 
 run qiime feature-table summarize \
     --i-table "$table" \
@@ -112,7 +112,7 @@ run qiime taxa collapse \
     --i-taxonomy "$classification" \
     --p-level 6 \
     --o-collapsed-table collapsed_table.qza
-# set '--p-level' (1-6) to collapse
+# set --p-level (1-6) to collapse
 
 mkdir -p "$Taxonomy_v" && cd "$Taxonomy_v"
 
@@ -132,7 +132,7 @@ run qiime diversity core-metrics \
     --p-sampling-depth 1700 \
     --m-metadata-file "$metadata" \
     --output-dir "$Diversity"
-# set '--p-sampling-depth'
+# set --p-sampling-depth
 # alpha diversity: shannon, observed-features, evenness
 # beta diversity: jaccard, bray-curtis
 
@@ -151,7 +151,7 @@ run qiime composition ancombc \
     --m-metadata-file "$metadata" \
     --p-formula Group \
     --o-differentials differentials.qza
-# set '--p-formula' to a column name of the metadata
+# set --p-formula to a column name of the metadata
 
 run qiime composition tabulate \
     --i-data differentials.qza \
