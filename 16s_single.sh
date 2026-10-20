@@ -43,7 +43,6 @@ mkdir -p "$Read" && cd "$Read"
 
 echo "Successfully import and demux read!"
 
-
 mkdir -p "$Feature" && cd "$Feature"
     qiime dada2 denoise-single \
         --i-demultiplexed-seqs "$Read/demux.qza" \
@@ -60,7 +59,6 @@ mkdir -p "$Feature" && cd "$Feature"
         --o-visualization summary.qzv
 
 echo "Successfully generate ASV table and its summary!"
-
 
 mkdir -p "$Taxonomy_a" && cd "$Taxonomy_a"
     qiime feature-classifier classify-consensus-blast \
@@ -79,7 +77,6 @@ mkdir -p "$Taxonomy_a" && cd "$Taxonomy_a"
 
 echo "Successfully classify feature and perform taxa collapse!"
 
-
 mkdir -p "$Taxonomy_v" && cd "$Taxonomy_v"
     qiime feature-table heatmap \
         --i-table "$Taxonomy_a/collapsed_table.qza" \
@@ -92,7 +89,6 @@ mkdir -p "$Taxonomy_v" && cd "$Taxonomy_v"
         --o-visualization taxa-barplot.qzv
 
 echo "Successfully visualize feature and taxonomy distribution!"
-
 
 # Diversity
     qiime diversity core-metrics \
@@ -113,7 +109,6 @@ echo "Successfully visualize feature and taxonomy distribution!"
         --o-visualization alpha_rarefaction.qzv
 
 echo "Successfully compute alpha and beta diversity scores!"
-
 
 mkdir -p "$Differential" && cd "$Differential"
     qiime composition ancombc \
