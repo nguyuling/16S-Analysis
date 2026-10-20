@@ -1,6 +1,6 @@
 # 16S Analysis Pipeline
 
-### Packages Needed
+### Environment / Packages Needed
 (refer `env.yml`)
 1. **qiime2** — `q2cli version 2024.10.1`
 2. **R** — `R version 4.3.3 (2024-02-29)`
@@ -9,7 +9,7 @@
 1. Locate all read files and metadata in a single folder, for example:
 
 ```
-Dir
+16S_Project
 ├── read_1.fastq.gz
 ├── read_n.fastq.qz
 └── sample-metadata.tsv
@@ -24,7 +24,7 @@ Dir
 
 ### Output Files Structure
 ```
-Dir
+16S_Project
 ├── 1_Reads
 │   ├── (all read files)
 │   └── data.qza                        # demuxed read
