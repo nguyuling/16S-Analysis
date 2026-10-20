@@ -1,8 +1,13 @@
 #!/bin/sh
 set -e
 
-# directories (rename if needed)
-Dir="/Volumes/T7/paired_end_sequences"
+# RENAME
+Dir="/Volumes/T7/paired_end_sequences"  # path of read files and metadata
+metadata_name="sample-metadata.tsv"     # metadata filename only
+ref_seqs="/Volumes/T7/databases/moving_pictures/reference-sequences.qza"    # path of reference sequence
+ref_taxa="/Volumes/T7/databases/moving_pictures/reference-taxonomy.qza"     # path of reference taxa
+
+# directories
 Reads="$Dir/1_Reads"
 Feature="$Dir/2_Feature"
 Taxonomy_a="$Dir/3_taxonomy_a"
@@ -10,12 +15,7 @@ Taxonomy_v="$Dir/4_taxonomy_v"
 Diversity="$Dir/5_diversity"
 Differential="$Dir/6_differential"
 
-# input files (rename if needed)
-metadata_name="sample-metadata.tsv"
-ref_seqs="/Volumes/T7/databases/moving_pictures/reference-sequences.qza"
-ref_taxa="/Volumes/T7/databases/moving_pictures/reference-taxonomy.qza"
-
-# generated files
+# files
 metadata="$Dir/$metadata_name"
 table="$Feature/table.qza"
 classification="$Taxonomy_a/classification.qza"
@@ -66,7 +66,7 @@ log "Log file: $log_file"
 mkdir -p "$Reads" && cd "$Reads"
 log "Moving input files into $Reads"
 for f in "$Dir"/*; do
-    [ -f "$f" ] || continue                  # move all read files except the metadata
+    [ -f "$f" ] || continue     # move all read files except the metadata
     name=$(basename "$f")
     if [ "$name" = "$metadata_name" ]; then
         continue
@@ -81,6 +81,7 @@ run qiime tools import \
     --input-format CasavaOneEightSingleLanePerSampleDirFmt \
     --output-path data.qza
 # run qiime tools list-types to check all --type
+# --input-format (optional)
 
 mkdir -p "$Feature" && cd "$Feature"
 
@@ -133,8 +134,6 @@ run qiime diversity core-metrics \
     --m-metadata-file "$metadata" \
     --output-dir "$Diversity"
 # set --p-sampling-depth
-# alpha diversity: shannon, observed-features, evenness
-# beta diversity: jaccard, bray-curtis
 
 cd "$Diversity"
 
@@ -143,13 +142,14 @@ run qiime diversity alpha-rarefaction \
     --p-max-depth 1700 \
     --m-metadata-file "$metadata" \
     --o-visualization alpha_rarefaction.qzv
+# set --p-max-depth
 
 mkdir -p "$Differential" && cd "$Differential"
 
 run qiime composition ancombc \
     --i-table "$table" \
     --m-metadata-file "$metadata" \
-    --p-formula Group \
+    --p-formula Habitat \
     --o-differentials differentials.qza
 # set --p-formula to a column name of the metadata
 
