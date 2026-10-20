@@ -28,24 +28,47 @@
 ├── 1_Reads
 │   ├── (all read files)
 │   └── data.qza                        # demuxed read
+│
 ├── 2_Feature
 │   ├── denoising-stats.qza
 │   ├── rep_seqs.qza                    # fasta sequences
 │   ├── summary.qzv                     # bar graph of sample and feature
 │   └── table.qza                       # binary format
+│
 ├── 3_taxonomy_a
 │   ├── classification.qza              # taxonomy assignment to feature
-│   ├── collapsed_table.qza             # binary format
-│   └── search-results.qza              # blast search result
+│   ├── search-results.qza              # blast search result
+│   ├── table_lvl3.qza                  # taxa collapse to level 3 - class
+│   └── table_lvl6.qza                  # taxa collapse to level 6 - genus    
+│   
 ├── 4_taxonomy_v
-│   ├── feature-heatmap.qzv
-│   └── taxa-barplot.qzv                # interactive barplot
-├── 5_diversity
-│   └── (all alpha and beta diversities)
-├── 6_differential
-│   ├── differentials.qza               # differential stats of each feature
-│   └── visualization.qzv
+│   ├── feature_heatmap.qzv
+│   └── taxa_barplot.qzv                # interactive barplot
+│
+├── 5_diversity_a
+│   ├── (all alpha and beta diversities .qza)
+│   ├── bray_curtis_pcoa_biplot.qza
+│   ├── jaccard_pcoa_biplot.qza
+│   └── rel_table_lvl6_.qza
+│
+├── 6_diversity_v
+│   ├── alpha_rarefaction.qzv
+│   ├── bray_curtis_emperor.qzv
+│   ├── bray_curtis_emperor_biplot.qzv
+│   ├── jaccard_emperor.qzv
+│   ├── jaccard_emperor_biplot.qzv
+│   ├── observed_features_vector.qzv
+│   └── shannon_vector.qzv
+│
+├── 7_differential
+│   ├── ancom.qzv                       # ancom volcano plot
+│   ├── comp_table.qza                  # composition table 
+│   ├── da_barplot.qzv                  # differential abundance bar plot
+│   ├── da_table.qzv                    # differential abundance interactive table
+│   └── differentials.qza               # differential abundance of each species
+│
 ├── logs
 │   └── pipeline_20261020_140840.log
+│
 └── sample-metadata.tsv
 ```
