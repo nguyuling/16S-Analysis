@@ -3,12 +3,12 @@ set -e
 
 # directories (rename if needed)
 dir="/Volumes/T7/single_end_sequences"
-dir_reads="$dir/1_reads"
-dir_feature="$dir/2_feature"
-dir_taxonomy_a="$dir/3_taxonomy_a"
-dir_taxonomy_v="$dir/4_taxonomy_v"
-dir_diversity="$dir/5_diversity"
-dir_differential="$dir/6_differential"
+Read="$dir/1_reads"
+Feature="$dir/2_feature"
+Taxonomy_a="$dir/3_taxonomy_a"
+Taxonomy_v="$dir/4_taxonomy_v"
+Diversity="$dir/5_diversity"
+Differential="$dir/6_differential"
 
 # input files (rename if needed)
 r1="sequences.fastq.gz"
@@ -18,19 +18,19 @@ ref_seqs="/Volumes/T7/databases/moving_pictures/reference-sequences.qza"
 ref_taxa="/Volumes/T7/databases/moving_pictures/reference-taxonomy.qza"
 
 # generated files
-table="$dir_feature/table.qza"
-classification="$dir_taxonomy_a/classification.qza"
+table="$Feature/table.qza"
+classification="$Taxonomy_a/classification.qza"
 
-mkdir -p "$dir_reads" && cd "$dir_reads"
+mkdir -p "$Read" && cd "$Read"
     for f in "$r1" "$barcode"; do       # append read file if needed 
         if [ -f "$dir/$f" ];
-            then mv "$dir/$f" "$dir_reads/"
+            then mv "$dir/$f" "$Read/"
         fi
     done
 
     qiime tools import \
         --type 'EMPSingleEndSequences' \
-        --input-path "$dir_reads" \
+        --input-path "$Read" \
         --output-path emp-single-end-sequences.qza \
     # run `qiime tools list-types` to check all '--type'
 
@@ -44,9 +44,9 @@ mkdir -p "$dir_reads" && cd "$dir_reads"
 echo "Successfully import and demux read!"
 
 
-mkdir -p "$dir_feature" && cd "$dir_feature"
+mkdir -p "$Feature" && cd "$Feature"
     qiime dada2 denoise-single \
-        --i-demultiplexed-seqs "$dir_reads/demux.qza" \
+        --i-demultiplexed-seqs "$Read/demux.qza" \
         --p-trim-left 0 \
         --p-trunc-len 120 \
         --o-representative-sequences rep_seqs.qza \
@@ -62,9 +62,9 @@ mkdir -p "$dir_feature" && cd "$dir_feature"
 echo "Successfully generate ASV table and its summary!"
 
 
-mkdir -p "$dir_taxonomy_a" && cd "$dir_taxonomy_a"
+mkdir -p "$Taxonomy_a" && cd "$Taxonomy_a"
     qiime feature-classifier classify-consensus-blast \
-        --i-query "$dir_feature/rep_seqs.qza" \
+        --i-query "$Feature/rep_seqs.qza" \
         --i-reference-reads "$ref_seqs" \
         --i-reference-taxonomy "$ref_taxa" \
         --o-classification "$classification" \
@@ -80,9 +80,9 @@ mkdir -p "$dir_taxonomy_a" && cd "$dir_taxonomy_a"
 echo "Successfully classify feature and perform taxa collapse!"
 
 
-mkdir -p "$dir_taxonomy_v" && cd "$dir_taxonomy_v"
+mkdir -p "$Taxonomy_v" && cd "$Taxonomy_v"
     qiime feature-table heatmap \
-        --i-table "$dir_taxonomy_a/collapsed_table.qza" \
+        --i-table "$Taxonomy_a/collapsed_table.qza" \
         --o-visualization feature-heatmap.qzv
 
     qiime taxa barplot \
@@ -94,17 +94,17 @@ mkdir -p "$dir_taxonomy_v" && cd "$dir_taxonomy_v"
 echo "Successfully visualize feature and taxonomy distribution!"
 
 
-# dir_diversity
+# Diversity
     qiime diversity core-metrics \
         --i-table "$table" \
         --p-sampling-depth 1103 \
         --m-metadata-file "$metadata" \
-        --output-dir "$dir_diversity"
+        --output-dir "$Diversity"
     # set '--p-sampling-depth'
     # alpha diversity: shannon, observed-features, faith, evenness
     # beta diversity: jaccard, bray-curtis
 
-    cd "$dir_diversity"
+    cd "$Diversity"
 
     qiime diversity alpha-rarefaction \
         --i-table "$table" \
@@ -115,7 +115,7 @@ echo "Successfully visualize feature and taxonomy distribution!"
 echo "Successfully compute alpha and beta diversity scores!"
 
 
-mkdir -p "$dir_differential" && cd "$dir_differential"
+mkdir -p "$Differential" && cd "$Differential"
     qiime composition ancombc \
         --i-table "$table" \
         --m-metadata-file "$metadata" \
