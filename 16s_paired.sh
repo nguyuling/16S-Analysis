@@ -162,6 +162,8 @@ run qiime diversity pcoa-biplot \
 
 mkdir -p "$Diversity_v" && cd "$Diversity_v"
 
+mv "$Diversity_a/bray_curtis_emperor.qzv" "$Diversity_a/jaccard_emperor.qzv" "$Diversity_v"
+
 run qiime diversity alpha-rarefaction \
     --i-table "$table" \
     --p-max-depth 1700 \
