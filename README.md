@@ -25,13 +25,11 @@ A 16S amplicon pipeline that imports paired-end reads, denoises them into amplic
 
 4. Activate virtual environment containing the required packages.
 ```bash
-#!/bin/bash
 conda activate <VENV_PATHNAME>
 ```
 
 5. Execute the shell script in terminal.
 ```bash
-#!/bin/bash
 chmod +x <PATH>/16s_paired.sh
 ./<PATH>/16s_paired.sh
 ```
