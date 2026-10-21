@@ -23,6 +23,13 @@
 3. Perform modification on the script where the comments locate, based on the reads file type, denoise settings, taxa level to collapse, sampling depth and metadata column name.
 
 ### Output Files Structure
+
+Directories with suffix:
+- `_a` contain table files `*.qza`
+- `_v` contain visualization files `*.qzv`
+
+All qiime zipped files can be viewed on [QIIME2 View](https://view.qiime2.org).
+
 ```
 16S_Project
 ├── 1_Reads
@@ -32,40 +39,40 @@
 ├── 2_Feature
 │   ├── denoising-stats.qza
 │   ├── rep_seqs.qza                    # fasta sequences
-│   ├── summary.qzv                     # bar graph of sample and feature
-│   └── table.qza                       # binary format
+│   └── table.qza                       # asv table
 │
 ├── 3_taxonomy_a
-│   ├── classification.qza              # taxonomy assignment to feature
+│   ├── classification.qza              # taxonomy assignment of features
 │   ├── search-results.qza              # blast search result
 │   ├── table_lvl3.qza                  # taxa collapse to level 3 - class
-│   └── table_lvl6.qza                  # taxa collapse to level 6 - genus    
+│   └── table_lvl7.qza                  # taxa collapse to level 7 - species    
 │   
 ├── 4_taxonomy_v
 │   ├── feature_heatmap.qzv
-│   └── taxa_barplot.qzv                # interactive barplot
+│   ├── taxa_barplot.qzv                # interactive bar plot
+│   └── summary.qzv                     # sample and taxa bar plot
 │
 ├── 5_diversity_a
 │   ├── (all alpha and beta diversities .qza)
 │   ├── bray_curtis_pcoa_biplot.qza
 │   ├── jaccard_pcoa_biplot.qza
-│   └── rel_table_lvl6_.qza
+│   └── rel_table_lvl3_.qza
 │
 ├── 6_diversity_v
-│   ├── alpha_rarefaction.qzv
-│   ├── bray_curtis_emperor.qzv
-│   ├── bray_curtis_emperor_biplot.qzv
-│   ├── jaccard_emperor.qzv
-│   ├── jaccard_emperor_biplot.qzv
-│   ├── observed_features_vector.qzv
-│   └── shannon_vector.qzv
+│   ├── alpha_rarefaction.qzv           # alpha: line chart
+│   ├── bray_curtis_emperor.qzv         # beta: 3D scatter plot
+│   ├── bray_curtis_emperor_biplot.qzv  # beta: 3D biplot
+│   ├── jaccard_emperor.qzv             # beta: 3D scatter plot
+│   ├── jaccard_emperor_biplot.qzv      # beta: 3D biplot
+│   ├── observed_features_vector.qzv    # alpha: box plot
+│   └── shannon_vector.qzv              # alpha: box plot
 │
 ├── 7_differential
 │   ├── ancom.qzv                       # ancom volcano plot
-│   ├── comp_table.qza                  # composition table 
-│   ├── da_barplot.qzv                  # differential abundance bar plot
-│   ├── da_table.qzv                    # differential abundance interactive table
-│   └── differentials.qza               # differential abundance of each species
+│   ├── comp_table.qza 
+│   ├── da_barplot.qzv                  # da bar plot
+│   ├── da_table.qzv                    # da interactive table
+│   └── differentials.qza
 │
 ├── logs
 │   └── pipeline_20261020_140840.log
