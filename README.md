@@ -23,7 +23,6 @@
 3. Perform modification on the script where the comments locate, based on the reads file type, denoise settings, taxa level to collapse, sampling depth and metadata column name.
 
 ### Output Files Structure
-
 Directories with suffix:
 - `_a` contain table files `*.qza`
 - `_v` contain visualization files `*.qzv`
@@ -48,9 +47,9 @@ All qiime zipped files can be viewed on [QIIME2 View](https://view.qiime2.org).
 │   └── table_lvl7.qza                  # taxa collapse to level 7 - species    
 │   
 ├── 4_taxonomy_v
-│   ├── feature_heatmap.qzv
-│   ├── taxa_barplot.qzv                # interactive bar plot
-│   └── summary.qzv                     # sample and taxa bar plot
+│   ├── feature_heatmap.qzv             # taxa heatmap
+│   ├── summary.qzv                     # sample and taxa bar plot
+│   └── taxa_barplot.qzv                # interactive bar plot
 │
 ├── 5_diversity_a
 │   ├── (all alpha and beta diversities .qza)
@@ -81,3 +80,61 @@ All qiime zipped files can be viewed on [QIIME2 View](https://view.qiime2.org).
 │
 └── sample-metadata.tsv
 ```
+
+### Sea Water and Pond Water Metagenomics Samples
+
+| Habitat | Samples |
+| --- | --- |
+| Sea water | A3, E1, E2 |
+| Pond water | SE01, SE07, SE09 |
+
+**Taxonomy Distribution**
+`feature_heatmap.qzv`
+<p align="center">
+    <img src="_v/taxonomy/feature-heatmap.svg" width="800">
+<p>
+
+`taxa_barplot.qzv`
+<p align="center">
+    <img src="_v/taxonomy/taxa_barplot.png" width="800">
+<p>
+
+`summary.qzv`
+<p align="center">
+    <img src="_v/taxonomy/summary.png" width="800">
+<p>
+
+**Diversity**
+`alpha_rarefaction.qzv`
+<p align="center">
+    <img src="_v/diversity/alpha_rarefaction.png" width="800">
+<p>
+
+`observed_features_vector.qzv`  |   `shannon_vector.qzv`
+<p align="center">
+    <img src="_v/diversity/observed_features_vector.svg" width="400">
+    <img src="_v/diversity/shannon_vector.svg" width="400">
+<p>
+
+`bray_curtis_emperor.qzv`   |   `jaccard_emperor.qzv`
+<p align="center">
+    <img src="_v/diversity/bray_curtis_emperor.png" width="400">
+    <img src="_v/diversity/jaccard_emperor.png" width="400">
+<p>
+
+`bray_curtis_emperor_biplot.qzv`    |   `jaccard_emperor_biplot.qzv`
+<p align="center">
+    <img src="_v/diversity/bray_curtis_emperor_biplot.png" width="400">
+    <img src="_v/diversity/jaccard_emperor_biplot.png" width="400">
+<p>
+
+**Differential Abundance**
+`ancom.qzv`
+<p align="center">
+    <img src="_v/differential/ancom.svg" width="800">
+<p>
+
+`da_barplot.qzv`
+<p align="center">
+    <img src="_v/differential/da_barplot.svg" width="800">
+<p>
