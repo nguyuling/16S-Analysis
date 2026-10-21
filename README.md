@@ -90,41 +90,41 @@ All qiime zipped files can be viewed on [QIIME2 View](https://view.qiime2.org).
 
 #### 1. Taxonomy Distribution
 
-`feature_heatmap.qzv`
+**`feature_heatmap.qzv`** — hierarchical clustering heatmap showing the relative abundances of microbial features across samples.
 <p align="center">
     <img src="_v/taxonomy/feature-heatmap.svg" width="800">
 <p>
 
-`taxa_barplot.qzv`
-<p align="center">
-    <img src="_v/taxonomy/taxa_barplot.png" width="800">
-<p>
-
-`summary.qzv`
+**`summary.qzv`** — sample frequency and feature frequency in table and bar plot
 <p align="center">
     <img src="_v/taxonomy/summary.png" width="800">
 <p>
 
+**`taxa_barplot.qzv`** — taxonomic barplot showing relative abundances of microbial taxa across samples clustered with selected taxonomic level
+<p align="center">
+    <img src="_v/taxonomy/taxa_barplot.png" width="800">
+<p>
+
 #### 2. Diversity
 
-`alpha_rarefaction.qzv`
+**`alpha_rarefaction.qzv`** — alpha rarefaction plot showing estimated species richness against sequencing depth (available in observed features and shannon metrics) 
 <p align="center">
     <img src="_v/diversity/alpha_rarefaction.png" width="800">
 <p>
 
-`observed_features_vector.qzv`    |    `shannon_vector.qzv`
+**`observed_features_vector.qzv` `shannon_vector.qzv`** — alpha diversities boxplot comparing the distribution of alpha diversity across metadata category (habitat)
 <p align="center">
     <img src="_v/diversity/observed_features_vector.svg" width="400">
     <img src="_v/diversity/shannon_vector.svg" width="400">
 <p>
 
-`bray_curtis_emperor.qzv`    |    `jaccard_emperor.qzv`
+**`bray_curtis_emperor.qzv` `jaccard_emperor.qzv`** — beta diversities 3D PCoA scatter plot showing similarity / dissimilarity among samples
 <p align="center">
     <img src="_v/diversity/bray_curtis_emperor.png" width="400">
     <img src="_v/diversity/jaccard_emperor.png" width="400">
 <p>
 
-`bray_curtis_emperor_biplot.qzv`    |    `jaccard_emperor_biplot.qzv`
+**`bray_curtis_emperor_biplot.qzv` `jaccard_emperor_biplot.qzv`** — beta diversities 3D PCoA biplot highlighting the specific microbial taxa driving the dissimilarity across samples
 <p align="center">
     <img src="_v/diversity/bray_curtis_emperor_biplot.png" width="400">
     <img src="_v/diversity/jaccard_emperor_biplot.png" width="400">
@@ -132,12 +132,12 @@ All qiime zipped files can be viewed on [QIIME2 View](https://view.qiime2.org).
 
 #### 3. Differential Abundance
 
-`ancom.qzv`
+**`ancom.qzv`** — ANCOM volcano scatter plot showing w-stats against CLR mean difference to identify significantly changing taxa between samples clustered by metadata category
 <p align="center">
     <img src="_v/differential/ancom.svg" width="800">
 <p>
 
-`da_barplot.qzv`
+**`da_barplot.qzv`** — barplot showing estimated LFC of significantly changing taxa between samples clustered by metadata category
 <p align="center">
     <img src="_v/differential/da_barplot.svg" width="800">
 <p>
