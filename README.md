@@ -43,7 +43,7 @@ All qiime zipped files can be viewed on [QIIME2 View](https://view.qiime2.org).
 │
 ├── 3_taxonomy_a
 │   ├── classification.qza              # taxonomy assignment of features
-│   ├── search-results.qza              # blast search result
+│   ├── search-results.qza
 │   ├── table_lvl3.qza                  # taxa collapse to level 3 - class
 │   └── table_lvl7.qza                  # taxa collapse to level 7 - species    
 │   
@@ -67,12 +67,14 @@ All qiime zipped files can be viewed on [QIIME2 View](https://view.qiime2.org).
 │   ├── observed_features_vector.qzv    # alpha: box plot
 │   └── shannon_vector.qzv              # alpha: box plot
 │
-├── 7_differential
-│   ├── ancom.qzv                       # ancom volcano plot
+├── 7_differential_a
 │   ├── comp_table.qza 
-│   ├── da_barplot.qzv                  # da bar plot
-│   ├── da_table.qzv                    # da interactive table
 │   └── differentials.qza
+│
+├── 8_differential_v
+│   ├── ancom.qzv                       # ancom volcano plot
+│   ├── da_barplot.qzv                  # da bar plot
+│   └── da_table.qzv                    # da interactive table
 │
 ├── logs
 │   └── pipeline_20261020_140840.log
