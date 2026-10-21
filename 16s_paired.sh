@@ -20,8 +20,8 @@ Differential="$Dir/7_differential"
 metadata="$Dir/$metadata_name"
 table="$Feature/table.qza"
 classification="$Taxonomy_a/classification.qza"
-table_lvl6="$Taxonomy_a/table_lvl6.qza"
-rel_table_lvl6="$Diversity_a/rel_table_lvl6.qza"
+table_lvl3="$Taxonomy_a/table_lvl3.qza"
+rel_table_lvl3="$Diversity_a/rel_table_lvl3.qza"
 
 # logging
 Log="$Dir/logs"
@@ -97,11 +97,6 @@ run qiime dada2 denoise-paired \
     --o-denoising-stats denoising-stats.qza
 # set --p-trunc-len-f and --p-trunc-len-r
 
-run qiime feature-table summarize \
-    --i-table "$table" \
-    --m-sample-metadata-file "$metadata" \
-    --o-visualization summary.qzv
-
 mkdir -p "$Taxonomy_a" && cd "$Taxonomy_a"
 
 run qiime feature-classifier classify-consensus-blast \
@@ -116,16 +111,20 @@ run qiime taxa collapse \
     --i-taxonomy "$classification" \
     --p-level 3 \
     --o-collapsed-table table_lvl3.qza
-# set --p-level (1-6) to collapse - for heatmap
+# set --p-level (1-6) to collapse
 
 run qiime taxa collapse \
     --i-table "$table" \
     --i-taxonomy "$classification" \
-    --p-level 6 \
-    --o-collapsed-table "$table_lvl6"
-# set --p-level (1-6) to collapse - for differentials stats
+    --p-level 7 \
+    --o-collapsed-table table_lvl7.qza
 
 mkdir -p "$Taxonomy_v" && cd "$Taxonomy_v"
+
+run qiime feature-table summarize \
+    --i-table "$Taxonomy_a/table_lvl7.qza" \
+    --m-sample-metadata-file "$metadata" \
+    --o-visualization visualization.qzv
 
 run qiime feature-table heatmap \
     --i-table "$Taxonomy_a/table_lvl3.qza" \
@@ -147,17 +146,17 @@ run qiime diversity core-metrics \
 cd "$Diversity_a"
 
 run qiime feature-table relative-frequency \
-    --i-table "$table_lvl6" \
-    --o-relative-frequency-table "$rel_table_lvl6"
+    --i-table "$table_lvl3" \
+    --o-relative-frequency-table "$rel_table_lvl3"
 
 run qiime diversity pcoa-biplot \
     --i-pcoa bray_curtis_pcoa_results.qza \
-    --i-features "$rel_table_lvl6" \
+    --i-features "$rel_table_lvl3" \
     --o-biplot bray_curtis_pcoa_biplot.qza
 
 run qiime diversity pcoa-biplot \
     --i-pcoa jaccard_pcoa_results.qza \
-    --i-features "$rel_table_lvl6" \
+    --i-features "$rel_table_lvl3" \
     --o-biplot jaccard_pcoa_biplot.qza
 
 mkdir -p "$Diversity_v" && cd "$Diversity_v"
@@ -194,7 +193,7 @@ run qiime emperor biplot \
 mkdir -p "$Differential" && cd "$Differential"
 
 run qiime composition ancombc \
-    --i-table "$table_lvl6" \
+    --i-table "$table_lvl3" \
     --m-metadata-file "$metadata" \
     --p-formula Habitat \
     --o-differentials differentials.qza
@@ -206,10 +205,12 @@ run qiime composition tabulate \
 
 run qiime composition da-barplot \
     --i-data differentials.qza \
+    --p-label-limit 400 \
     --o-visualization da_barplot.qzv
+# set --p-label-limit, increase if taxonomy labels cannot be seen in full
 
 run qiime composition add-pseudocount \
-    --i-table "$table_lvl6" \
+    --i-table "$table_lvl3" \
     --o-composition-table comp_table.qza
 
 run qiime composition ancom \
@@ -217,12 +218,3 @@ run qiime composition ancom \
     --m-metadata-file "$metadata" \
     --m-metadata-column Habitat \
     --o-visualization ancom.qzv
-
-# plot using R
-# 6_diversity_v
-    # bray_curtis_emperor_biplot.qzv
-    # jaccard_emperor_biplot.qzv
-# 7_differential
-    # da_table.qzv
-    # da_barplot.qzv
-    # ancom.qzv
