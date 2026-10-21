@@ -14,7 +14,8 @@ Taxonomy_a="$Dir/3_taxonomy_a"
 Taxonomy_v="$Dir/4_taxonomy_v"
 Diversity_a="$Dir/5_diversity_a"
 Diversity_v="$Dir/6_diversity_v"
-Differential="$Dir/7_differential"
+Differential_a="$Dir/7_differential_a"
+Differential_v="$Dir/8_differential_v"
 
 # files
 metadata="$Dir/$metadata_name"
@@ -190,7 +191,7 @@ run qiime emperor biplot \
     --m-sample-metadata-file "$metadata" \
     --o-visualization jaccard_emperor_biplot.qzv
 
-mkdir -p "$Differential" && cd "$Differential"
+mkdir -p "$Differential_a" && cd "$Differential_a"
 
 run qiime composition ancombc \
     --i-table "$table_lvl3" \
@@ -199,22 +200,24 @@ run qiime composition ancombc \
     --o-differentials differentials.qza
 # set --p-formula to a column name of the metadata
 
-run qiime composition tabulate \
-    --i-data differentials.qza \
-    --o-visualization da_table.qzv
-
-run qiime composition da-barplot \
-    --i-data differentials.qza \
-    --p-label-limit 400 \
-    --o-visualization da_barplot.qzv
-# set --p-label-limit, increase if taxonomy labels cannot be seen in full
-
 run qiime composition add-pseudocount \
     --i-table "$table_lvl3" \
     --o-composition-table comp_table.qza
 
+mkdir -p "$Differential_v" && cd "$Differential_v"
+
+run qiime composition tabulate \
+    --i-data "$Differential_a/differentials.qza" \
+    --o-visualization da_table.qzv
+
+run qiime composition da-barplot \
+    --i-data "$Differential_a/differentials.qza" \
+    --p-label-limit 400 \
+    --o-visualization da_barplot.qzv
+# set --p-label-limit, increase if taxonomy labels cannot be seen in full
+
 run qiime composition ancom \
-    --i-table comp_table.qza \
+    --i-table "$Differential_a/comp_table.qza" \
     --m-metadata-file "$metadata" \
     --m-metadata-column Habitat \
     --o-visualization ancom.qzv
