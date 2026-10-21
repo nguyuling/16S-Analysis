@@ -1,4 +1,5 @@
-# 16S Analysis Pipeline
+## 16S Analysis Pipeline
+A 16S amplicon pipeline that imports paired-end reads, denoises them into amplicon sequence variants with DADA2, assigns taxonomy against 16S reference database, and runs diversity and differential abundance analyses in QIIME 2.
 
 ### Environment / Packages Needed
 (refer `env.yml`)
@@ -21,6 +22,17 @@
 - reference files pathname
 
 3. Perform modification on the script where the comments locate, based on the reads file type, denoise settings, taxa level to collapse, sampling depth and metadata column name.
+
+4. Activate virtual environment containing the required packages.
+```bash
+conda activate <VENV_PATHNAME>
+```
+
+5. Execute the shell script in terminal.
+```bash
+chmod +x <PATH>/16s_paired.sh
+./<PATH>/16s_paired.sh
+```
 
 ### Output Files Structure
 Directories with suffix:
