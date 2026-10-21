@@ -85,7 +85,7 @@ run qiime tools import \
     --input-format CasavaOneEightSingleLanePerSampleDirFmt \
     --output-path data.qza
 # run qiime tools list-types to check all --type
-# --input-format (optional)
+# input-format (optional)
 
 mkdir -p "$Feature" && cd "$Feature"
 
@@ -96,7 +96,7 @@ run qiime dada2 denoise-paired \
     --o-representative-sequences rep_seqs.qza \
     --o-table "$table" \
     --o-denoising-stats denoising-stats.qza
-# set --p-trunc-len-f and --p-trunc-len-r
+# set p-trunc-len-f and --p-trunc-len-r
 
 mkdir -p "$Taxonomy_a" && cd "$Taxonomy_a"
 
@@ -112,7 +112,7 @@ run qiime taxa collapse \
     --i-taxonomy "$classification" \
     --p-level 3 \
     --o-collapsed-table table_lvl3.qza
-# set --p-level (1-6) to collapse
+# set p-level (1-6) to collapse
 
 run qiime taxa collapse \
     --i-table "$table" \
@@ -125,7 +125,7 @@ mkdir -p "$Taxonomy_v" && cd "$Taxonomy_v"
 run qiime feature-table summarize \
     --i-table "$Taxonomy_a/table_lvl7.qza" \
     --m-sample-metadata-file "$metadata" \
-    --o-visualization visualization.qzv
+    --o-visualization summary.qzv
 
 run qiime feature-table heatmap \
     --i-table "$Taxonomy_a/table_lvl3.qza" \
@@ -142,7 +142,7 @@ run qiime diversity core-metrics \
     --p-sampling-depth 1700 \
     --m-metadata-file "$metadata" \
     --output-dir "$Diversity_a"
-# set --p-sampling-depth
+# set p-sampling-depth
 
 cd "$Diversity_a"
 
@@ -169,7 +169,7 @@ run qiime diversity alpha-rarefaction \
     --p-max-depth 1700 \
     --m-metadata-file "$metadata" \
     --o-visualization alpha_rarefaction.qzv
-# set --p-max-depth
+# set p-max-depth
 
 run qiime diversity alpha-group-significance \
     --i-alpha-diversity "$Diversity_a/shannon_vector.qza" \
@@ -198,7 +198,7 @@ run qiime composition ancombc \
     --m-metadata-file "$metadata" \
     --p-formula Habitat \
     --o-differentials differentials.qza
-# set --p-formula to a column name of the metadata
+# set p-formula to a column name of the metadata
 
 run qiime composition add-pseudocount \
     --i-table "$table_lvl3" \
@@ -214,7 +214,7 @@ run qiime composition da-barplot \
     --i-data "$Differential_a/differentials.qza" \
     --p-label-limit 400 \
     --o-visualization da_barplot.qzv
-# set --p-label-limit, increase if taxonomy labels cannot be seen in full
+# set p-label-limit, increase if taxonomy labels cannot be seen in full
 
 run qiime composition ancom \
     --i-table "$Differential_a/comp_table.qza" \
