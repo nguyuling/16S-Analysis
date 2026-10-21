@@ -88,7 +88,8 @@ All qiime zipped files can be viewed on [QIIME2 View](https://view.qiime2.org).
 | Sea water | A3, E1, E2 |
 | Pond water | SE01, SE07, SE09 |
 
-**Taxonomy Distribution**
+#### 1. Taxonomy Distribution
+
 `feature_heatmap.qzv`
 <p align="center">
     <img src="_v/taxonomy/feature-heatmap.svg" width="800">
@@ -104,31 +105,33 @@ All qiime zipped files can be viewed on [QIIME2 View](https://view.qiime2.org).
     <img src="_v/taxonomy/summary.png" width="800">
 <p>
 
-**Diversity**
+#### 2. Diversity
+
 `alpha_rarefaction.qzv`
 <p align="center">
     <img src="_v/diversity/alpha_rarefaction.png" width="800">
 <p>
 
-`observed_features_vector.qzv`  |   `shannon_vector.qzv`
+`observed_features_vector.qzv`    |    `shannon_vector.qzv`
 <p align="center">
     <img src="_v/diversity/observed_features_vector.svg" width="400">
     <img src="_v/diversity/shannon_vector.svg" width="400">
 <p>
 
-`bray_curtis_emperor.qzv`   |   `jaccard_emperor.qzv`
+`bray_curtis_emperor.qzv`    |    `jaccard_emperor.qzv`
 <p align="center">
     <img src="_v/diversity/bray_curtis_emperor.png" width="400">
     <img src="_v/diversity/jaccard_emperor.png" width="400">
 <p>
 
-`bray_curtis_emperor_biplot.qzv`    |   `jaccard_emperor_biplot.qzv`
+`bray_curtis_emperor_biplot.qzv`    |    `jaccard_emperor_biplot.qzv`
 <p align="center">
     <img src="_v/diversity/bray_curtis_emperor_biplot.png" width="400">
     <img src="_v/diversity/jaccard_emperor_biplot.png" width="400">
 <p>
 
-**Differential Abundance**
+#### 3. Differential Abundance
+
 `ancom.qzv`
 <p align="center">
     <img src="_v/differential/ancom.svg" width="800">
