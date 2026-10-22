@@ -2,10 +2,10 @@
 set -e
 
 # RENAME
-Dir="/Volumes/T7/16s_project"                                               # path of read files and metadata
-metadata_name="sample-metadata.tsv"                                         # metadata filename only
-ref_seqs="/Volumes/T7/databases/moving_pictures/reference-sequences.qza"    # path of reference sequence
-ref_taxa="/Volumes/T7/databases/moving_pictures/reference-taxonomy.qza"     # path of reference taxa
+Dir="/Volumes/T7/16s_project"                                               # set path of read files and metadata
+metadata_name="sample-metadata.tsv"                                         # set metadata (filename only)
+ref_seqs="/Volumes/T7/databases/moving_pictures/reference-sequences.qza"    # set path of reference sequence
+ref_taxa="/Volumes/T7/databases/moving_pictures/reference-taxonomy.qza"     # set path of reference taxa
 
 # directories
 Reads="$Dir/1_reads"
@@ -67,36 +67,51 @@ log "PIPELINE STARTED"
 log "Data directory: $Dir"
 log "Log file: $log_file"
 
-mkdir -p "$Reads" && cd "$Reads"
-log "Moving input files into $Reads"
-for f in "$Dir"/*; do
-    [ -f "$f" ] || continue     # move all read files except the metadata
-    name=$(basename "$f")
-    if [ "$name" = "$metadata_name" ]; then
-        continue
-    fi
-    mv "$f" "$Reads/"
-    log "Moved: $name"
-done
+if [ -d "$Reads" ]; then
+    log "SKIPPED: $Reads already exists, not moving files"
+else
+    mkdir -p "$Reads" && cd "$Reads"
+    log "Moving input files into $Reads"
+    for f in "$Dir"/*; do
+        [ -f "$f" ] || continue     # move all read files except the metadata
+        name=$(basename "$f")
+        if [ "$name" = "$metadata_name" ]; then
+            continue
+        fi
+        mv "$f" "$Reads/"
+        log "Moved: $name"
+    done
+fi
 
-run qiime tools import \
-    --type 'SampleData[PairedEndSequencesWithQuality]' \
-    --input-path "$Reads" \
-    --input-format CasavaOneEightSingleLanePerSampleDirFmt \
-    --output-path data.qza
-# run qiime tools list-types to check all --type
-# input-format (optional)
+if [ -f "$Reads/data.qza" ]; then
+        log "SKIPPED: import (found existing $Reads/data.qza)"
+    else
+        run qiime tools import \
+            --type 'SampleData[PairedEndSequencesWithQuality]' \
+            --input-path "$Reads" \
+            --input-format CasavaOneEightSingleLanePerSampleDirFmt \
+            --output-path "$Reads/data.qza"
+        # run qiime tools list-types to check all --type
+        # input-format (optional)
+fi
 
-mkdir -p "$Feature" && cd "$Feature"
+if [ -f "$table" ];
+    then log "SKIPPED: import and denoise (found existing $table)"
+else
+    mkdir -p "$Feature" && cd "$Feature"
 
-run qiime dada2 denoise-paired \
-    --i-demultiplexed-seqs "$Reads/data.qza" \
-    --p-trunc-len-f 0 \
-    --p-trunc-len-r 0 \
-    --o-representative-sequences rep_seqs.qza \
-    --o-table "$table" \
-    --o-denoising-stats denoising-stats.qza
-# set p-trunc-len-f and --p-trunc-len-r
+    # option to not rerun
+    run qiime dada2 denoise-paired \
+        --i-demultiplexed-seqs "$Reads/data.qza" \
+        --p-trunc-len-f 0 \
+        --p-trunc-len-r 0 \
+        --o-representative-sequences rep_seqs.qza \
+        --o-table "$table" \
+        --o-denoising-stats denoising-stats.qza
+    # set p-trunc-len-f and --p-trunc-len-r
+fi
+
+rm -rf "$Taxonomy_a" "$Taxonomy_v" "$Diversity_a" "$Diversity_v" "$Differential_a" "$Differential_v"
 
 mkdir -p "$Taxonomy_a" && cd "$Taxonomy_a"
 
