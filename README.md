@@ -34,6 +34,8 @@ chmod +x <PATH>/16s_paired.sh
 ./<PATH>/16s_paired.sh
 ```
 
+6. For subsequent run, `qiime tools import` and `qiime dada2 denoise-paired` will not execute if the respective output files already exist, remove the output files if you wish to reexecute the step.
+
 ### Output Files Structure
 Directories with suffix:
 - `_a` contain table files `*.qza`
