@@ -1,8 +1,8 @@
 #!/bin/sh
 # sh 16s.sh                 interactive menu
-# sh 16s.sh 6 7             run these steps only
+# sh 16s.sh 6 7             run selected step(s), regardless
 # sh 16s.sh all             run every step, skipping finished ones
-# sh 16s.sh allforce        run every step, regardless of existing outputs
+# sh 16s.sh allforce        run every step, rerun every step regardless
 
 ScriptDir="$(cd "$(dirname "$0")" && pwd)"
 . "$ScriptDir/16s_lib.sh"
@@ -253,7 +253,7 @@ da_barplot() {                                              # 20
 # ———————————————————————————————————— entry point ——————————————————————————————————————
 
 if [ $# -eq 0 ]; then
-    menu
+    show_menu
 elif [ "$1" = "all" ]; then
     run_all 0
 elif [ "$1" = "allforce" ]; then
