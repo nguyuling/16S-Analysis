@@ -3,23 +3,24 @@
 
 # ———————————————————————————— SET your paths ————————————————————————————
 
-Dir="/Volumes/T7/16s_project"
-metadata_name="sample-metadata.tsv"
-ref_seqs="/Volumes/T7/databases/moving_pictures/reference-sequences.qza"
-ref_taxa="/Volumes/T7/databases/moving_pictures/reference-taxonomy.qza"
+OutputDir="/Volumes/T7/16s_project"         # SET output files directory
+metadata_name="sample-metadata.tsv"         # SET metadata filename only
+ref_seqs="/Volumes/T7/databases/moving_pictures/reference-sequences.qza"    # SET ref seqs pathname
+ref_taxa="/Volumes/T7/databases/moving_pictures/reference-taxonomy.qza"     # SET ref taxa pathname
 
 # ————————————————————————— directories & files ———————————————————————————
 
-Reads="$Dir/1_reads"
-Feature="$Dir/2_feature"
-Taxonomy_a="$Dir/3_taxonomy_a"
-Taxonomy_v="$Dir/4_taxonomy_v"
-Diversity_a="$Dir/5_diversity_a"
-Diversity_v="$Dir/6_diversity_v"
-Differential_a="$Dir/7_differential_a"
-Differential_v="$Dir/8_differential_v"
+Reads="$OutputDir/1_reads"
+Feature="$OutputDir/2_feature"
+Taxonomy_a="$OutputDir/3_taxonomy_a"
+Taxonomy_v="$OutputDir/4_taxonomy_v"
+Diversity_a="$OutputDir/5_diversity_a"
+Diversity_v="$OutputDir/6_diversity_v"
+Differential_a="$OutputDir/7_differential_a"
+Differential_v="$OutputDir/8_differential_v"
+Log="$OutputDir/logs"
 
-metadata="$Dir/$metadata_name"
+metadata="$OutputDir/$metadata_name"
 table="$Feature/table.qza"
 rep_seqs="$Feature/rep_seqs.qza"
 classification="$Taxonomy_a/classification.qza"
@@ -27,71 +28,67 @@ taxa_collapsed="$Taxonomy_a/taxa_collapsed.qza"
 taxa_species="$Taxonomy_a/taxa_species.qza"
 taxa_collapsed_relfreq="$Diversity_a/taxa_collapsed_relfreq.qza"
 
-# ———————————————————————————————— logging —————————————————————————————————
-
-Log="$Dir/logs"
 mkdir -p "$Log"
-[ -n "$log_file" ] || log_file="$Log/pipeline_$(date '+%Y%m%d_%H%M%S').log"
+log_file="$Log/pipeline_$(date '+%Y%m%d_%H%M%S').log"
 
-timestamp() { date '+%Y-%m-%d %H:%M:%S'; }
+# ———————————————————————————— helper functions —————————————————————————————
 
-log() {
-    msg="[$(timestamp)] $*"
+log() {                                     # log datetime and message to terminal and log file
+    msg="[$(date '+%Y-%m-%d %H:%M:%S')] $*"
     echo "$msg"
     echo "$msg" >> "$log_file"
 }
 
-# ———————————————————————————— helper functions —————————————————————————————
-
-run() {                                     # run a command, send output to log, return exit code
-    log "START: $*"
-    s=$(date +%s)
-    if "$@" >> "$log_file" 2>&1; then
-        log "OK ($(( $(date +%s) - s ))s)"
+run() {                                     # usage: run <command> <parameter>
+    log "START: $*"                         # log the starting step
+    start=$(date +%s)                       # start time
+    if "$@" >> "$log_file" 2>&1; then       # run the command, write stdout / stderr to log file
+        log "OK ($(( $(date +%s) - start ))s)"  # exit 0 : log run time (current time - start time)
     else
-        rc=$?
-        log "FAILED (exit $rc): $*"
+        rc=$?                               # exit != 0 : create variable of the latest exit code
+        log "FAILED (exit $rc): $*"         # log the exit code and failed command
         return "$rc"
     fi
 }
 
 need() {                                    # usage: need <file or dir> <step number that creates it>
-    if [ ! -e "$1" ]; then
-        log "ERROR: missing $1. Run step $2 first."
+    if [ ! -e "$1" ]; then                  # if the prerequisite file is absent
+        log "ERROR: missing $1. Run step $2 first."     # log reminder message about running the upstream step first
         return 1
     fi
 }
 
 skip_if_done() {                            # usage: skip_if_done <step name> <output>...
-    name=$1; shift
-    [ "${FORCE:-0}" = 1 ] && return 1
-    for f in "$@"; do
-        [ -e "$f" ] || return 1
+    name=$1; shift                          # remove first arguments (step name), leaving only the output files
+    [ "${FORCE:-0}" = 1 ] && return 1       # if all force, then don't skip the step / rerun
+    for f in "$@"; do                       # for all output files
+        [ -e "$f" ] || return 1             # if any output file is absent, don't skip the step / rerun
     done
-    log "SKIPPED $name: outputs already exist"
+    log "SKIPPED $name: outputs already exist"          # if all output files exist, log message about skipping the step
     return 0
 }
 
-clear_outputs() {                           # usage: clear_outputs <file or dir>...
-    for f in "$@"; do
-        if [ -e "$f" ]; then
-            rm -rf "$f" && log "Removed old output: $f"
+clear_outputs() {                           # usage: clear_outputs <file(s) or dir(s)>
+    for f in "$@"; do                       # for all output files 
+        if [ -e "$f" ]; then                # if the output file exist
+            rm -rf "$f" && log "Removed old output: $f" # remove it 
         fi
     done
     return 0
 }
 
-produce() {                                 # usage: produce <label> <output> <command...>
-    label=$1; out=$2; shift 2
-    skip_if_done "$label" "$out" && return 0
-    mkdir -p "$(dirname "$out")" || return 1
-    clear_outputs "$out"
+produce() {                                 # usage: produce <step name> <output>
+    name=$1; output=$2; shift 2             #  
+    skip_if_done "$name" "$output" && return 0          # call skip_if_done, if the step is skipped / no rerun, don't produce output dir
+    mkdir -p "$(dirname "$output")" || return 1         # else produce an output dir
+    clear_outputs "$output"                             # call clear_outputs to remove the existing output files
     run "$@"
 }
 
-# —————————————————————————————— dispatch ——————————————————————————————————
+# —————————————–——————————— entry point functions ———————————————————————————
 
-dispatch_step() {
+run_step() {                                # usage: run_step <step_number>
+    STEPS_RUN=$(( ${STEPS_RUN:-0} + 1 ))    # add 1 to counter each time a step is started
     case "$1" in
         1)  import ;;
         2)  denoise ;;
@@ -113,63 +110,64 @@ dispatch_step() {
         18) ancom ;;
         19) da_table ;;
         20) da_barplot ;;
-        *)  log "Unknown step: $1"; return 1 ;;
-    esac
-}
-
-run_step() {
-    dispatch_step "$1"
+        *)  log "Unknown step: $1"; STEP_FAILED=1; return 1 ;;  # when irrelevant step number is selected, log error message
+    esac || { STEP_FAILED=1; return 1; }
 }
 
 run_all() {                                 # usage: run_all <FORCE value: 0 skip finished, 1 rerun everything>
-    FORCE=$1
-    for n in $(seq 1 20); do
-        if ! run_step "$n"; then
-            log "STOPPED at step $n. Fix the error and run again."
+    FORCE=$1                                # create variable for first argument (force value)
+    start=$(date +%s)                       # start time
+    for n in $(seq 1 20); do                # for all steps
+        if ! run_step "$n"; then            # run each step, if fail
+            log "STOPPED at step $n. Fix the error and run again."  # log the error message and the failed step number
             return 1
         fi
     done
-    log "ALL STEPS DONE"
+    total=$(( $(date +%s) - start ))        # if successfully run, calculate the total run time (current time - start time)
+    log "ALL STEPS DONE. Total time: $(( total / 60 )) min $(( total % 60 )) sec"   # log the total run time 
 }
 
-show_menu() {
+show_menu() {                               # usage show_menu
     cat <<'EOF'
-———————————————————————————— 16S pipeline ————————————————————————————
- 1  Move reads and import (QIIME 2)  11  PCoA biplot (Jaccard)
- 2  Denoise with DADA2               12  Alpha rarefaction
- 3  Classify taxonomy                13  Alpha significance (Shannon)
- 4  Collapse to taxa level 3         14  Alpha significance (observed)
- 5  Summarize level 7 table          15  Emperor biplot (Bray-Curtis)
- 6  Heatmap, level 3                 16  Emperor biplot (Jaccard)
- 7  Taxa barplot                     17  ANCOM-BC
- 8  Core diversity metrics           18  ANCOM (with pseudocount)
- 9  Relative frequency, level 3      19  Differential abundance table
-10  PCoA biplot (Bray-Curtis)        20  Differential abundance barplot
 
- a  Run all, skip finished steps
- f  Run all, rerun every step regardless
- q  Quit
-——————————————————————————————————————————————————————————————————————
+    ———————————————————————————— 16S pipeline ————————————————————————————
+    1  Move reads and import (QIIME 2)  11  PCoA biplot (Jaccard)
+    2  Denoise with DADA2               12  Alpha rarefaction
+    3  Classify taxonomy                13  Alpha significance (Shannon)
+    4  Collapse to taxa level 3         14  Alpha significance (observed)
+    5  Summarize level 7 table          15  Emperor biplot (Bray-Curtis)
+    6  Heatmap, level 3                 16  Emperor biplot (Jaccard)
+    7  Taxa barplot                     17  ANCOM-BC
+    8  Core diversity metrics           18  ANCOM (with pseudocount)
+    9  Relative frequency, level 3      19  Differential abundance table
+    10  PCoA biplot (Bray-Curtis)        20  Differential abundance barplot
+
+    a  Run all, skip finished steps
+    Select step(s), separated by spaces (e.g. 3, or 4 5)
+    f  Run all, rerun every step regardless
+    q  Quit
+
 EOF
 }
 
-menu() {
+menu() {                                    # usage: menu
     while true; do
-        show_menu
-        printf 'Select step(s), separated by spaces (e.g. 3, or 4 5): '
-        read -r choice || exit 0
-        case "$choice" in
+        show_menu                           # show menu
+        printf 'Run: '                      # prompt user choice
+        read -r choice || exit 0            # read user choice
+        case "$choice" in                   # option for choice
             q|Q) exit 0 ;;
-            a|A) run_all 0 ;;
-            f|F) run_all 1 ;;
-            "") ;;
-            *)
-                FORCE=1
-                for n in $choice; do
-                    case "$n" in
-                        ''|*[!0-9]*) echo "Invalid input: $n"; break ;;
+            a|A) run_all 0 ;;               # if run all (skipping finished one), set force value to 0
+            f|F) run_all 1 ;;               # if run all regardlessly, set force value to 1
+            "") ;;                          # if empty line, show menu again
+            *)                              # if any step number(s) are selected
+                FORCE=1                     # rerun selected step(s)
+                for n in $choice; do        # for all characters in the choice string
+                    case "$n" in            # for each char 
+                        ''|*[!0-9]*) echo "Invalid input: $n"           # if empty value or non-digit
+                        break ;;
                     esac
-                    if ! run_step "$n"; then
+                    if ! run_step "$n"; then                            # if fail to run the step
                         echo "Step $n failed. Check $log_file, fix the problem, then select step $n again."
                         break
                     fi
