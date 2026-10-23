@@ -4,8 +4,8 @@
 # sh 16s.sh all             run every step, skipping finished ones
 # sh 16s.sh allforce        run every step, regardless of existing outputs
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-. "$SCRIPT_DIR/16s_lib.sh"
+ScriptDir="$(cd "$(dirname "$0")" && pwd)"
+. "$ScriptDir/16s_lib.sh"
 
 trap 'log "SESSION ENDED"' EXIT
 log "SESSION STARTED. Log file: $log_file"
@@ -15,7 +15,7 @@ log "SESSION STARTED. Log file: $log_file"
 import() {                                                  # 1
     mkdir -p "$Reads" || return 1
     if [ ! -f "$Reads/data.qza" ] && [ ! -f "$Reads/.moved" ]; then
-        for f in "$Dir"/*; do
+        for f in "$OutputDir"/*; do
             [ -f "$f" ] || continue
             [ "$(basename "$f")" = "$metadata_name" ] && continue
             mv "$f" "$Reads/" && log "Moved: $(basename "$f")"
