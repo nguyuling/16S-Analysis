@@ -43,6 +43,7 @@ denoise() {                                                 # 2
         --i-demultiplexed-seqs "$Reads/data.qza" \
         --p-trunc-len-f 0 \
         --p-trunc-len-r 0 \
+        --p-n-threads "$threads" \
         --o-representative-sequences "$rep_seqs" \
         --o-table "$table" \
         --o-denoising-stats "$Feature/denoising-stats.qza"
@@ -58,6 +59,7 @@ classify() {                                                # 3
         --i-query "$rep_seqs" \
         --i-reference-reads "$ref_seqs" \
         --i-reference-taxonomy "$ref_taxa" \
+        --p-num-threads "$threads" \
         --o-classification "$classification" \
         --o-search-results "$Taxonomy_a/search-results.qza"
 }
@@ -118,6 +120,7 @@ core_metrics() {                                            # 8
     run qiime diversity core-metrics \
         --i-table "$table" \
         --p-sampling-depth 1700 \
+        --p-n-jobs "$threads" \
         --m-metadata-file "$metadata" \
         --output-dir "$Diversity_a" || return 1
     # SET p-sampling-depth
