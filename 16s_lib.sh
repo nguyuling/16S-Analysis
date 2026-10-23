@@ -127,7 +127,7 @@ run_all() {                                 # usage: run_all <FORCE value: 0 ski
     log "ALL STEPS DONE. Total time: $(( total / 60 )) min $(( total % 60 )) sec"   # log the total run time 
 }
 
-show_menu() {                               # usage show_menu
+menu() {                               # usage menu
     cat <<'EOF'
 
     ———————————————————————————— 16S pipeline ————————————————————————————
@@ -142,17 +142,17 @@ show_menu() {                               # usage show_menu
     9  Relative frequency, level 3      19  Differential abundance table
     10  PCoA biplot (Bray-Curtis)        20  Differential abundance barplot
 
-    a  Run all, skip finished steps
-    Select step(s), separated by spaces (e.g. 3, or 4 5)
-    f  Run all, rerun every step regardless
-    q  Quit
+    - Run selected step(s), separated by spaces (e.g. 6 7)
+    - a  Run all steps, skipping finished ones
+    - f  Run all steps, rerun every step regardless
+    - q  Quit
 
 EOF
 }
 
-menu() {                                    # usage: menu
+show_menu() {                                    # usage: show_menu
     while true; do
-        show_menu                           # show menu
+        menu                           # show menu
         printf 'Run: '                      # prompt user choice
         read -r choice || exit 0            # read user choice
         case "$choice" in                   # option for choice
