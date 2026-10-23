@@ -7,34 +7,43 @@ A 16S amplicon pipeline that imports paired-end reads, denoises them into amplic
 2. **R** — `R version 4.3.3 (2024-02-29)`
 
 ### Guide to Run the Pipeline
-1. Locate all read files and metadata in a single folder, for example:
-
+1. Locate the files below:
+- read files and metadata in a single folder (also serve as output directory)
 ```
 16S_Project
 ├── read_1.fastq.gz
 ├── read_n.fastq.qz
 └── sample-metadata.tsv
 ```
+- script file
+```
+16S_Pipeline
+├── 16s_lib.sh      # variable and function declarations (DO NOT RUN THIS)
+└── 16s.sh          # commands to perform analysis
+```
 
-2. Provide pathname in the RENAME block:
-- directory / input files folder pathname
+2. In `16s_lib.sh`, provide the following in the RENAME block:
+- output directory
 - metadata filename
 - reference files pathname
 
-3. Perform modification on the script where the comments locate, based on the reads file type, denoise settings, taxa level to collapse, sampling depth and metadata column name.
+3. In `16s.sh`, perform modification to the parameter where necessary, based on the reads file type, denoise settings, taxa level to collapse, sampling depth and metadata column name (refer comments).
 
-4. Activate virtual environment containing the required packages.
+4. In terminal, activate virtual environment containing the required packages.
 ```bash
 conda activate <VENV_PATHNAME>
 ```
 
-5. Execute the shell script in terminal.
+5. Then, run any related command below:
 ```bash
-chmod +x <PATH>/16s_paired.sh
-./<PATH>/16s_paired.sh
-```
+chmod +x <PATH>/16s.sh      # first-time running only
 
-6. For subsequent run, `qiime tools import` and `qiime dada2 denoise-paired` will not execute if the respective output files already exist, remove the output files if you wish to reexecute the step.
+sh 16s.sh                   # show the interactive menu, can direct to below 3 options
+
+sh 16s.sh 6 7               # run selected step(s), regardless
+sh 16s.sh all               # run all steps, skipping finished ones
+sh 16s.sh allforce          # run all steps, rerun every step regardless
+```
 
 ### Output Files Structure
 Directories with suffix:
