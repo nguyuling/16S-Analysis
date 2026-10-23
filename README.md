@@ -48,7 +48,7 @@ sh 16s.sh allforce          # run all steps, rerun every step regardless
 ### Output Files Structure
 Directories with suffix:
 - `_a` contain table files `*.qza`
-- `_v` contain visualization files `*.qzv`
+- `img` contain visualization files `*.qzv`
 
 All qiime zipped files can be viewed on [QIIME2 View](https://view.qiime2.org).
 
@@ -69,7 +69,7 @@ All qiime zipped files can be viewed on [QIIME2 View](https://view.qiime2.org).
 │   ├── table_lvl3.qza                  # taxa collapse to level 3 - class
 │   └── table_lvl7.qza                  # taxa collapse to level 7 - species    
 │   
-├── 4_taxonomy_v
+├── 4_taxonomyimg
 │   ├── feature_heatmap.qzv             # taxa heatmap
 │   ├── summary.qzv                     # sample and taxa bar plot
 │   └── taxa_barplot.qzv                # interactive bar plot
@@ -80,20 +80,20 @@ All qiime zipped files can be viewed on [QIIME2 View](https://view.qiime2.org).
 │   ├── jaccard_pcoa_biplot.qza
 │   └── rel_table_lvl3_.qza
 │
-├── 6_diversity_v
+├── 6_diversityimg
 │   ├── alpha_rarefaction.qzv           # alpha: line chart
 │   ├── bray_curtis_emperor.qzv         # beta: 3D scatter plot
 │   ├── bray_curtis_emperor_biplot.qzv  # beta: 3D biplot
 │   ├── jaccard_emperor.qzv             # beta: 3D scatter plot
 │   ├── jaccard_emperor_biplot.qzv      # beta: 3D biplot
-│   ├── observed_features_vector.qzv    # alpha: box plot
-│   └── shannon_vector.qzv              # alpha: box plot
+│   ├── observed_featuresimgector.qzv    # alpha: box plot
+│   └── shannonimgector.qzv              # alpha: box plot
 │
 ├── 7_differential_a
 │   ├── comp_table.qza 
 │   └── differentials.qza
 │
-├── 8_differential_v
+├── 8_differentialimg
 │   ├── ancom.qzv                       # ancom volcano plot
 │   ├── da_barplot.qzv                  # da bar plot
 │   └── da_table.qzv                    # da interactive table
@@ -115,52 +115,52 @@ All qiime zipped files can be viewed on [QIIME2 View](https://view.qiime2.org).
 
 **`feature_heatmap.qzv`** — hierarchical clustering heatmap showing the relative abundances of microbial features across samples
 <p align="center">
-    <img src="_v/taxonomy/feature-heatmap.svg" width="800">
+    <img src="img/taxonomy/feature-heatmap.svg" width="800">
 <p>
 
 **`summary.qzv`** — sample frequency and feature frequency in table and bar plot
 <p align="center">
-    <img src="_v/taxonomy/summary.png" width="800">
+    <img src="img/taxonomy/summary.png" width="800">
 <p>
 
 **`taxa_barplot.qzv`** — taxonomic barplot showing relative abundances of microbial taxa across samples clustered with selected taxonomic level
 <p align="center">
-    <img src="_v/taxonomy/taxa_barplot.png" width="800">
+    <img src="img/taxonomy/taxa_barplot.png" width="800">
 <p>
 
 #### 2. Diversity
 
 **`alpha_rarefaction.qzv`** — alpha rarefaction plot showing estimated species richness against sequencing depth (available in observed features and shannon index) 
 <p align="center">
-    <img src="_v/diversity/alpha_rarefaction.png" width="800">
+    <img src="img/diversity/alpha_rarefaction.png" width="800">
 <p>
 
-**`observed_features_vector.qzv` `shannon_vector.qzv`** — alpha diversity boxplot comparing the distribution of alpha diversity across metadata category (habitat)
+**`observed_featuresimgector.qzv` `shannonimgector.qzv`** — alpha diversity boxplot comparing the distribution of alpha diversity across metadata category (habitat)
 <p align="center">
-    <img src="_v/diversity/observed_features_vector.svg" width="400">
-    <img src="_v/diversity/shannon_vector.svg" width="400">
+    <img src="img/diversity/observed_featuresimgector.svg" width="400">
+    <img src="img/diversity/shannonimgector.svg" width="400">
 <p>
 
 **`bray_curtis_emperor.qzv` `jaccard_emperor.qzv`** — beta diversity 3D PCoA scatter plot showing similarity / dissimilarity among samples
 <p align="center">
-    <img src="_v/diversity/bray_curtis_emperor.png" width="400">
-    <img src="_v/diversity/jaccard_emperor.png" width="400">
+    <img src="img/diversity/bray_curtis_emperor.png" width="400">
+    <img src="img/diversity/jaccard_emperor.png" width="400">
 <p>
 
 **`bray_curtis_emperor_biplot.qzv` `jaccard_emperor_biplot.qzv`** — beta diversity 3D PCoA biplot highlighting the specific microbial taxa driving the dissimilarity across samples
 <p align="center">
-    <img src="_v/diversity/bray_curtis_emperor_biplot.png" width="400">
-    <img src="_v/diversity/jaccard_emperor_biplot.png" width="400">
+    <img src="img/diversity/bray_curtis_emperor_biplot.png" width="400">
+    <img src="img/diversity/jaccard_emperor_biplot.png" width="400">
 <p>
 
 #### 3. Differential Abundance
 
 **`ancom.qzv`** — ANCOM volcano scatter plot showing w-stats against CLR mean difference to identify significantly changing taxa between samples clustered by metadata category (hover over data point to show the taxa)
 <p align="center">
-    <img src="_v/differential/ancom.svg" width="800">
+    <img src="img/differential/ancom.svg" width="800">
 <p>
 
 **`da_barplot.qzv`** — barplot showing estimated LFC of significantly changing taxa between samples clustered by metadata category
 <p align="center">
-    <img src="_v/differential/da_barplot.svg" width="800">
+    <img src="img/differential/da_barplot.svg" width="800">
 <p>
