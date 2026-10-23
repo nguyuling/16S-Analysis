@@ -1,6 +1,6 @@
 #!/bin/sh
 # sh 16s.sh                 interactive menu
-# sh 16s.sh 3 4 5           run these steps only
+# sh 16s.sh 6 7             run these steps only
 # sh 16s.sh all             run every step, skipping finished ones
 # sh 16s.sh allforce        run every step, regardless of existing outputs
 
