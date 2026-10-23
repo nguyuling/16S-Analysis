@@ -104,7 +104,9 @@ All qiime zipped files can be viewed on [QIIME2 View](https://view.qiime2.org).
 └── sample-metadata.tsv
 ```
 
-### Sea Water and Pond Water Metagenomics Samples
+### Visualization Files
+
+Sample data: Sea Water and Pond Water Metagenomics Samples
 
 | Habitat | Samples |
 | --- | --- |
@@ -163,4 +165,11 @@ All qiime zipped files can be viewed on [QIIME2 View](https://view.qiime2.org).
 **`da_barplot.qzv`** — barplot showing estimated LFC of significantly changing taxa between samples clustered by metadata category
 <p align="center">
     <img src="img/differential/da_barplot.svg" width="800">
+<p>
+
+### Documentation
+
+`16s_lib.sh` function dependencies
+<p align="center">
+    <img src="img/function_dependencies.svg" width="800">
 <p>
