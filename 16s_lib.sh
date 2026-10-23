@@ -7,6 +7,7 @@ Outdir="/Volumes/T7/16s_project"         # SET output files directory
 metadata_name="sample-metadata.tsv"         # SET metadata filename only
 ref_seqs="/Volumes/T7/databases/moving_pictures/reference-sequences.qza"    # SET ref seqs pathname
 ref_taxa="/Volumes/T7/databases/moving_pictures/reference-taxonomy.qza"     # SET ref taxa pathname
+threads=8
 
 # ————————————————————————— directories & files ———————————————————————————
 
