@@ -82,7 +82,7 @@ produce() {                                 # usage: produce <step name> <output
     skip_if_done "$name" "$output" && return 0          # call skip_if_done, if the step is skipped / no rerun, don't produce output dir
     mkdir -p "$(dirname "$output")" || return 1         # else produce an output dir
     clear_outputs "$output"                             # call clear_outputs to remove the existing output files
-    run "$@"
+    run "$@"                                            # call run to run command
 }
 
 # —————————————–——————————— entry point functions ———————————————————————————
