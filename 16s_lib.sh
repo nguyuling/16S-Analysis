@@ -3,24 +3,24 @@
 
 # ———————————————————————————— SET your paths ————————————————————————————
 
-OutputDir="/Volumes/T7/16s_project"         # SET output files directory
+Outdir="/Volumes/T7/16s_project"         # SET output files directory
 metadata_name="sample-metadata.tsv"         # SET metadata filename only
 ref_seqs="/Volumes/T7/databases/moving_pictures/reference-sequences.qza"    # SET ref seqs pathname
 ref_taxa="/Volumes/T7/databases/moving_pictures/reference-taxonomy.qza"     # SET ref taxa pathname
 
 # ————————————————————————— directories & files ———————————————————————————
 
-Reads="$OutputDir/1_reads"
-Feature="$OutputDir/2_feature"
-Taxonomy_a="$OutputDir/3_taxonomy_a"
-Taxonomy_v="$OutputDir/4_taxonomy_v"
-Diversity_a="$OutputDir/5_diversity_a"
-Diversity_v="$OutputDir/6_diversity_v"
-Differential_a="$OutputDir/7_differential_a"
-Differential_v="$OutputDir/8_differential_v"
-Log="$OutputDir/logs"
+Reads="$Outdir/1_reads"
+Feature="$Outdir/2_feature"
+Taxonomy_a="$Outdir/3_taxonomy_a"
+Taxonomy_v="$Outdir/4_taxonomy_v"
+Diversity_a="$Outdir/5_diversity_a"
+Diversity_v="$Outdir/6_diversity_v"
+Differential_a="$Outdir/7_differential_a"
+Differential_v="$Outdir/8_differential_v"
+Log="$Outdir/logs"
 
-metadata="$OutputDir/$metadata_name"
+metadata="$Outdir/$metadata_name"
 table="$Feature/table.qza"
 rep_seqs="$Feature/rep_seqs.qza"
 classification="$Taxonomy_a/classification.qza"

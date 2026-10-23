@@ -15,7 +15,7 @@ log "SESSION STARTED. Log file: $log_file"
 import() {                                                  # 1
     mkdir -p "$Reads" || return 1
     if [ ! -f "$Reads/data.qza" ] && [ ! -f "$Reads/.moved" ]; then
-        for f in "$OutputDir"/*; do
+        for f in "$Outdir"/*; do
             [ -f "$f" ] || continue
             [ "$(basename "$f")" = "$metadata_name" ] && continue
             mv "$f" "$Reads/" && log "Moved: $(basename "$f")"
