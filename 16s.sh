@@ -64,7 +64,7 @@ classify() {                                                # 3
         --o-search-results "$Taxonomy_a/search-results.qza"
 }
 
-collapse_lvl3() {                                           # 4
+taxa_collapse() {                                           # 4
     need "$classification" 3 || return 1
     prepare "collapse level 3" "$taxa_collapsed" \
         qiime taxa collapse \
@@ -169,7 +169,7 @@ alpha_rarefaction() {                                       # 12
     # SET p-max-depth
 }
 
-alpha_shannon() {                                           # 13
+shannon() {                                           # 13
     need "$Diversity_a/shannon_vector.qza" 8 || return 1
     prepare "alpha significance (Shannon)" "$Diversity_v/shannon_vector.qzv" \
         qiime diversity alpha-group-significance \
@@ -178,7 +178,7 @@ alpha_shannon() {                                           # 13
         --o-visualization "$Diversity_v/shannon_vector.qzv"
 }
 
-alpha_observed() {                                          # 14
+observed() {                                          # 14
     need "$Diversity_a/observed_features_vector.qza" 8 || return 1
     prepare "alpha significance (observed)" "$Diversity_v/observed_features_vector.qzv" \
         qiime diversity alpha-group-significance \
