@@ -94,7 +94,7 @@ run_step() {                                # usage: run_step <step_number>
         1)  import ;;
         2)  denoise ;;
         3)  classify ;;
-        4)  collapse_lvl3 ;;
+        4)  taxa_collapse ;;
         5)  summarize ;;
         6)  heatmap ;;
         7)  taxa_barplot ;;
@@ -103,8 +103,8 @@ run_step() {                                # usage: run_step <step_number>
         10) biplot_bray ;;
         11) biplot_jaccard ;;
         12) alpha_rarefaction ;;
-        13) alpha_shannon ;;
-        14) alpha_observed ;;
+        13) shannon ;;
+        14) observed ;;
         15) emperor_bray ;;
         16) emperor_jaccard ;;
         17) ancombc ;;
@@ -151,9 +151,9 @@ menu() {                               # usage menu
 EOF
 }
 
-show_menu() {                                    # usage: show_menu
+show_menu() {                               # usage: show_menu
     while true; do
-        menu                           # show menu
+        menu                                # show menu
         printf 'Run: '                      # prompt user choice
         read -r choice || exit 0            # read user choice
         case "$choice" in                   # option for choice
