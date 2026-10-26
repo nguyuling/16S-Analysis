@@ -3,7 +3,7 @@ A 16S amplicon pipeline that imports paired-end reads, denoises them into amplic
 
 ### Environment / Packages Needed
 (refer `env.yml`)
-1. **qiime2** — `q2cli version 2024.10.1`
+1. **QIIME2** — `q2cli version 2024.10.1`
 2. **R** — `R version 4.3.3 (2024-02-29)`
 
 ### Guide to Run the Pipeline
@@ -137,10 +137,10 @@ Sample data: Sea Water and Pond Water Metagenomics Samples
     <img src="img/diversity/alpha_rarefaction.png" width="800">
 <p>
 
-**`observed_featuresimgector.qzv` `shannonimgector.qzv`** — alpha diversity boxplot comparing the distribution of alpha diversity across metadata category (habitat)
+**`observed_features_vector.qzv` `shannon_vector.qzv`** — alpha diversity boxplot comparing the distribution of alpha diversity across metadata category (habitat)
 <p align="center">
-    <img src="img/diversity/observed_featuresimgector.svg" width="400">
-    <img src="img/diversity/shannonimgector.svg" width="400">
+    <img src="img/diversity/observed_features_vector.svg" width="400">
+    <img src="img/diversity/shannon_vector.svg" width="400">
 <p>
 
 **`bray_curtis_emperor.qzv` `jaccard_emperor.qzv`** — beta diversity 3D PCoA scatter plot showing similarity / dissimilarity among samples
