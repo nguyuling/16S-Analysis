@@ -48,7 +48,7 @@ sh 16s.sh allforce          # run all steps, rerun every step regardless
 ### Output Files Structure
 Directories with suffix:
 - `_a` contain table files `*.qza`
-- `img` contain visualization files `*.qzv`
+- `_v` contain visualization files `*.qzv`
 
 All qiime zipped files can be viewed on [QIIME2 View](https://view.qiime2.org).
 
@@ -69,7 +69,7 @@ All qiime zipped files can be viewed on [QIIME2 View](https://view.qiime2.org).
 │   ├── table_lvl3.qza                  # taxa collapse to level 3 - class
 │   └── table_lvl7.qza                  # taxa collapse to level 7 - species    
 │   
-├── 4_taxonomyimg
+├── 4_taxonomy_v
 │   ├── feature_heatmap.qzv             # taxa heatmap
 │   ├── summary.qzv                     # sample and taxa bar plot
 │   └── taxa_barplot.qzv                # interactive bar plot
@@ -80,20 +80,20 @@ All qiime zipped files can be viewed on [QIIME2 View](https://view.qiime2.org).
 │   ├── jaccard_pcoa_biplot.qza
 │   └── rel_table_lvl3_.qza
 │
-├── 6_diversityimg
+├── 6_diversity_v
 │   ├── alpha_rarefaction.qzv           # alpha: line chart
 │   ├── bray_curtis_emperor.qzv         # beta: 3D scatter plot
 │   ├── bray_curtis_emperor_biplot.qzv  # beta: 3D biplot
 │   ├── jaccard_emperor.qzv             # beta: 3D scatter plot
 │   ├── jaccard_emperor_biplot.qzv      # beta: 3D biplot
-│   ├── observed_featuresimgector.qzv    # alpha: box plot
-│   └── shannonimgector.qzv              # alpha: box plot
+│   ├── observed_features_vector.qzv    # alpha: box plot
+│   └── shannon_vector.qzv              # alpha: box plot
 │
 ├── 7_differential_a
 │   ├── comp_table.qza 
 │   └── differentials.qza
 │
-├── 8_differentialimg
+├── 8_differential_v
 │   ├── ancom.qzv                       # ancom volcano plot
 │   ├── da_barplot.qzv                  # da bar plot
 │   └── da_table.qzv                    # da interactive table
