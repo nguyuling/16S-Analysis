@@ -54,7 +54,7 @@ denoise() {                                                 # 2
 
 classify() {                                                # 3
     need "$rep_seqs" 2 || return 1
-    produce "classify" "$classification" \
+    prepare "classify" "$classification" \
         qiime feature-classifier classify-consensus-blast \
         --i-query "$rep_seqs" \
         --i-reference-reads "$ref_seqs" \
@@ -66,7 +66,7 @@ classify() {                                                # 3
 
 collapse_lvl3() {                                           # 4
     need "$classification" 3 || return 1
-    produce "collapse level 3" "$taxa_collapsed" \
+    prepare "collapse level 3" "$taxa_collapsed" \
         qiime taxa collapse \
         --i-table "$table" \
         --i-taxonomy "$classification" \
@@ -94,7 +94,7 @@ summarize() {                                               # 5
 
 heatmap() {                                                 # 6
     need "$taxa_collapsed" 4 || return 1
-    produce "heatmap" "$Taxonomy_v/feature_heatmap.qzv" \
+    prepare "heatmap" "$Taxonomy_v/feature_heatmap.qzv" \
         qiime feature-table heatmap \
         --i-table "$taxa_collapsed" \
         --o-visualization "$Taxonomy_v/feature_heatmap.qzv"
@@ -102,7 +102,7 @@ heatmap() {                                                 # 6
 
 taxa_barplot() {                                            # 7
     need "$classification" 3 || return 1
-    produce "taxa barplot" "$Taxonomy_v/taxa_barplot.qzv" \
+    prepare "taxa barplot" "$Taxonomy_v/taxa_barplot.qzv" \
         qiime taxa barplot \
         --i-table "$table" \
         --i-taxonomy "$classification" \
@@ -116,7 +116,6 @@ core_metrics() {                                            # 8
     need "$table" 2 || return 1
     skip_if_done "core metrics" "$Diversity_a/bray_curtis_pcoa_results.qza" && return 0
     clear_outputs "$Diversity_a"            # core-metrics fails if its output dir exists
-    mkdir -p "$Diversity_v" || return 1
     run qiime diversity core-metrics \
         --i-table "$table" \
         --p-sampling-depth 1700 \
@@ -124,13 +123,14 @@ core_metrics() {                                            # 8
         --m-metadata-file "$metadata" \
         --output-dir "$Diversity_a" || return 1
     # SET p-sampling-depth
+    mkdir -p "$Diversity_v" || return 1
     mv "$Diversity_a/bray_curtis_emperor.qzv" "$Diversity_a/jaccard_emperor.qzv" "$Diversity_v/" 2>/dev/null
     return 0
 }
 
 rel_freq() {                                                # 9
     need "$taxa_collapsed" 4 || return 1
-    produce "relative frequency" "$taxa_collapsed_relfreq" \
+    prepare "relative frequency" "$taxa_collapsed_relfreq" \
         qiime feature-table relative-frequency \
         --i-table "$taxa_collapsed" \
         --o-relative-frequency-table "$taxa_collapsed_relfreq"
@@ -139,7 +139,7 @@ rel_freq() {                                                # 9
 biplot_bray() {                                             # 10
     need "$Diversity_a/bray_curtis_pcoa_results.qza" 8 || return 1
     need "$taxa_collapsed_relfreq" 9 || return 1
-    produce "Bray-Curtis PCoA biplot" "$Diversity_a/bray_curtis_pcoa_biplot.qza" \
+    prepare "Bray-Curtis PCoA biplot" "$Diversity_a/bray_curtis_pcoa_biplot.qza" \
         qiime diversity pcoa-biplot \
         --i-pcoa "$Diversity_a/bray_curtis_pcoa_results.qza" \
         --i-features "$taxa_collapsed_relfreq" \
@@ -149,7 +149,7 @@ biplot_bray() {                                             # 10
 biplot_jaccard() {                                          # 11
     need "$Diversity_a/jaccard_pcoa_results.qza" 8 || return 1
     need "$taxa_collapsed_relfreq" 9 || return 1
-    produce "Jaccard PCoA biplot" "$Diversity_a/jaccard_pcoa_biplot.qza" \
+    prepare "Jaccard PCoA biplot" "$Diversity_a/jaccard_pcoa_biplot.qza" \
         qiime diversity pcoa-biplot \
         --i-pcoa "$Diversity_a/jaccard_pcoa_results.qza" \
         --i-features "$taxa_collapsed_relfreq" \
@@ -160,7 +160,7 @@ biplot_jaccard() {                                          # 11
 
 alpha_rarefaction() {                                       # 12
     need "$table" 2 || return 1
-    produce "alpha rarefaction" "$Diversity_v/alpha_rarefaction.qzv" \
+    prepare "alpha rarefaction" "$Diversity_v/alpha_rarefaction.qzv" \
         qiime diversity alpha-rarefaction \
         --i-table "$table" \
         --p-max-depth 1700 \
@@ -171,7 +171,7 @@ alpha_rarefaction() {                                       # 12
 
 alpha_shannon() {                                           # 13
     need "$Diversity_a/shannon_vector.qza" 8 || return 1
-    produce "alpha significance (Shannon)" "$Diversity_v/shannon_vector.qzv" \
+    prepare "alpha significance (Shannon)" "$Diversity_v/shannon_vector.qzv" \
         qiime diversity alpha-group-significance \
         --i-alpha-diversity "$Diversity_a/shannon_vector.qza" \
         --m-metadata-file "$metadata" \
@@ -180,7 +180,7 @@ alpha_shannon() {                                           # 13
 
 alpha_observed() {                                          # 14
     need "$Diversity_a/observed_features_vector.qza" 8 || return 1
-    produce "alpha significance (observed)" "$Diversity_v/observed_features_vector.qzv" \
+    prepare "alpha significance (observed)" "$Diversity_v/observed_features_vector.qzv" \
         qiime diversity alpha-group-significance \
         --i-alpha-diversity "$Diversity_a/observed_features_vector.qza" \
         --m-metadata-file "$metadata" \
@@ -189,7 +189,7 @@ alpha_observed() {                                          # 14
 
 emperor_bray() {                                            # 15
     need "$Diversity_a/bray_curtis_pcoa_biplot.qza" 10 || return 1
-    produce "Emperor biplot (Bray-Curtis)" "$Diversity_v/bray_curtis_emperor_biplot.qzv" \
+    prepare "Emperor biplot (Bray-Curtis)" "$Diversity_v/bray_curtis_emperor_biplot.qzv" \
         qiime emperor biplot \
         --i-biplot "$Diversity_a/bray_curtis_pcoa_biplot.qza" \
         --m-sample-metadata-file "$metadata" \
@@ -198,7 +198,7 @@ emperor_bray() {                                            # 15
 
 emperor_jaccard() {                                         # 16
     need "$Diversity_a/jaccard_pcoa_biplot.qza" 11 || return 1
-    produce "Emperor biplot (Jaccard)" "$Diversity_v/jaccard_emperor_biplot.qzv" \
+    prepare "Emperor biplot (Jaccard)" "$Diversity_v/jaccard_emperor_biplot.qzv" \
         qiime emperor biplot \
         --i-biplot "$Diversity_a/jaccard_pcoa_biplot.qza" \
         --m-sample-metadata-file "$metadata" \
@@ -209,7 +209,7 @@ emperor_jaccard() {                                         # 16
 
 ancombc() {                                                 # 17
     need "$taxa_collapsed" 4 || return 1
-    produce "ANCOM-BC" "$Differential_a/differentials.qza" \
+    prepare "ANCOM-BC" "$Differential_a/differentials.qza" \
         qiime composition ancombc \
         --i-table "$taxa_collapsed" \
         --m-metadata-file "$metadata" \
@@ -237,7 +237,7 @@ ancom() {                                                   # 18
 
 da_table() {                                                # 19
     need "$Differential_a/differentials.qza" 17 || return 1
-    produce "DA table" "$Differential_v/da_table.qzv" \
+    prepare "DA table" "$Differential_v/da_table.qzv" \
         qiime composition tabulate \
         --i-data "$Differential_a/differentials.qza" \
         --o-visualization "$Differential_v/da_table.qzv"
@@ -245,7 +245,7 @@ da_table() {                                                # 19
 
 da_barplot() {                                              # 20
     need "$Differential_a/differentials.qza" 17 || return 1
-    produce "DA barplot" "$Differential_v/da_barplot.qzv" \
+    prepare "DA barplot" "$Differential_v/da_barplot.qzv" \
         qiime composition da-barplot \
         --i-data "$Differential_a/differentials.qza" \
         --p-label-limit 400 \

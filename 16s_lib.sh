@@ -77,11 +77,11 @@ clear_outputs() {                           # usage: clear_outputs <file(s) or d
     done
     return 0
 }
-
-produce() {                                 # usage: produce <step name> <output>
+f
+prepare() {                                 # usage: prepare <step name> <output>
     name=$1; output=$2; shift 2             #  
-    skip_if_done "$name" "$output" && return 0          # call skip_if_done, if the step is skipped / no rerun, don't produce output dir
-    mkdir -p "$(dirname "$output")" || return 1         # else produce an output dir
+    skip_if_done "$name" "$output" && return 0          # call skip_if_done, if the step is skipped / no rerun, don't create output dir
+    mkdir -p "$(dirname "$output")" || return 1         # else create an output dir
     clear_outputs "$output"                             # call clear_outputs to remove the existing output files
     run "$@"                                            # call run to run command
 }
