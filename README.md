@@ -171,9 +171,5 @@ Sample data: Sea Water and Pond Water Metagenomics Samples
 
 `16s_lib.sh` function dependencies
 <p align="center">
-    <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="img/function_dependencies/dark.svg">
-        <source media="(prefers-color-scheme: light)" srcset="img/function_dependencies/light.svg">
-        <img alt="function dependencies" src="img/function_dependencies/light.svg" width="800">
-    </picture>
+    <img src="img/function_dependencies.svg" width="800">
 <p>
